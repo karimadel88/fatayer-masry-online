@@ -10,7 +10,7 @@ const HeroSection = () => {
           <div className="flex-1 text-center md:text-right">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight font-heading">
               <span className="text-primary">الفطير البلدي</span>{" "}
-              <span className="block mt-2">بالسمنة البلدي</span>
+              <span className="block mt-2">من فطير ام كريم</span>
             </h1>
             <p className="text-lg md:text-xl mb-8 text-muted-foreground max-w-lg mx-auto md:mr-0">
               مذاق أصيل من الفطير المصري البلدي الطازج يومياً بالسمنة البلدي،

@@ -13,7 +13,7 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-primary font-heading">
-              فطيرك عندنا
+              فطير ام كريم
             </h1>
           </div>
 
