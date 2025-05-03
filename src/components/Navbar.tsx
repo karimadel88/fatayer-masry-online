@@ -26,10 +26,10 @@ const Navbar = () => {
             <Link to="/products" className="font-medium hover:text-primary transition-colors">
               قائمة الطعام
             </Link>
-            <a href="#order" className="font-medium hover:text-primary transition-colors">
+            <a href="/#order" className="font-medium hover:text-primary transition-colors">
               اطلب الآن
             </a>
-            <a href="#contact" className="font-medium hover:text-primary transition-colors">
+            <a href="/#contact" className="font-medium hover:text-primary transition-colors">
               تواصل معنا
             </a>
           </nav>
@@ -75,14 +75,14 @@ const Navbar = () => {
               قائمة الطعام
             </Link>
             <a 
-              href="#order" 
+              href="/#order" 
               className="px-4 py-2 font-medium hover:text-primary hover:bg-secondary/50 rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               اطلب الآن
             </a>
             <a 
-              href="#contact" 
+              href="/#contact" 
               className="px-4 py-2 font-medium hover:text-primary hover:bg-secondary/50 rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >

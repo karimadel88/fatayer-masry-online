@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const HeroSection = () => {
@@ -17,12 +18,16 @@ const HeroSection = () => {
               عجينة هشة ومقرمشة مع حشوات غنية لمذاق لا يُنسى
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <Button className="text-lg px-6 py-6 rounded-lg font-bold" size="lg">
-                اطلب الآن
-              </Button>
-              <Button className="text-lg px-6 py-6 rounded-lg font-bold" size="lg" variant="outline">
-                تصفح القائمة
-              </Button>
+              <Link to="/#order">
+                <Button className="text-lg px-6 py-6 rounded-lg font-bold" size="lg">
+                  اطلب الآن
+                </Button>
+              </Link>
+              <Link to="/products">
+                <Button className="text-lg px-6 py-6 rounded-lg font-bold" size="lg" variant="outline">
+                  تصفح القائمة
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="flex-1 mt-8 md:mt-0">
