@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 
@@ -13,18 +14,18 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-primary font-heading">
-              فطير ام كريم
+              <Link to="/">فطير ام كريم</Link>
             </h1>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#home" className="font-medium hover:text-primary transition-colors">
+            <Link to="/" className="font-medium hover:text-primary transition-colors">
               الرئيسية
-            </a>
-            <a href="#menu" className="font-medium hover:text-primary transition-colors">
+            </Link>
+            <Link to="/products" className="font-medium hover:text-primary transition-colors">
               قائمة الطعام
-            </a>
+            </Link>
             <a href="#order" className="font-medium hover:text-primary transition-colors">
               اطلب الآن
             </a>
@@ -35,9 +36,11 @@ const Navbar = () => {
 
           {/* Order Button (Desktop) */}
           <div className="hidden md:block">
-            <Button className="font-bold rounded-lg">
-              اطلب الآن
-            </Button>
+            <Link to="/products">
+              <Button className="font-bold rounded-lg">
+                تصفح القائمة
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -57,20 +60,20 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <nav className="md:hidden py-4 flex flex-col gap-4">
-            <a 
-              href="#home" 
+            <Link 
+              to="/" 
               className="px-4 py-2 font-medium hover:text-primary hover:bg-secondary/50 rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               الرئيسية
-            </a>
-            <a 
-              href="#menu" 
+            </Link>
+            <Link 
+              to="/products" 
               className="px-4 py-2 font-medium hover:text-primary hover:bg-secondary/50 rounded transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               قائمة الطعام
-            </a>
+            </Link>
             <a 
               href="#order" 
               className="px-4 py-2 font-medium hover:text-primary hover:bg-secondary/50 rounded transition-colors"
@@ -85,9 +88,11 @@ const Navbar = () => {
             >
               تواصل معنا
             </a>
-            <Button className="mt-2 font-bold">
-              اطلب الآن
-            </Button>
+            <Link to="/products" onClick={() => setIsMenuOpen(false)}>
+              <Button className="mt-2 font-bold">
+                تصفح القائمة
+              </Button>
+            </Link>
           </nav>
         )}
       </div>
