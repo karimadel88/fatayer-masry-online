@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Search, Filter } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { toast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // بيانات المنتجات للعرض
 const productsData: Product[] = [
@@ -108,6 +110,8 @@ const productsData: Product[] = [
 ];
 
 const Products = () => {
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [products, setProducts] = useState<Product[]>(productsData);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('الكل');
@@ -166,25 +170,39 @@ const Products = () => {
     return cart.reduce((total, product) => total + product.price, 0);
   };
 
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      toast({
+        title: "السلة فارغة",
+        description: "الرجاء إضافة منتجات إلى السلة أولاً",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Navigate to checkout with cart items
+    navigate('/checkout', { state: { orderItems: cart } });
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
       {/* Hero section للمنتجات */}
-      <div className="bg-muted py-8">
+      <div className="bg-muted py-6 md:py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-center">قائمة منتجاتنا</h1>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto">
+          <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4 text-center">قائمة منتجاتنا</h1>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto text-sm md:text-base">
             تشكيلة متنوعة من الفطير البلدي المصري الأصيل والقرص البلدي المخبوز طازجاً كل يوم
           </p>
         </div>
       </div>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <main className="flex-grow container mx-auto px-4 py-4 md:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6">
           {/* Filters للشاشات الكبيرة */}
           <div className="hidden lg:block">
-            <Card className="p-4">
+            <Card className="p-4 sticky top-20">
               <h2 className="text-xl font-bold mb-4">تصفية المنتجات</h2>
               
               <div className="mb-4">
@@ -221,88 +239,95 @@ const Products = () => {
           
           {/* المنتجات وشريط البحث */}
           <div className="lg:col-span-3">
-            <div className="flex flex-wrap gap-4 items-center justify-between mb-6">
-              <div className="relative w-full md:w-auto md:flex-1">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4 md:mb-6">
+              <div className="relative w-full">
                 <Input
                   type="text"
                   placeholder="ابحث عن منتج..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4"
+                  className="pl-10"
                 />
                 <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               </div>
 
-              {/* تبديل الفلاتر للموبايل */}
-              <Button 
-                variant="outline" 
-                className="md:hidden flex items-center gap-2"
-                onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-              >
-                <Filter className="h-4 w-4" />
-                الفلاتر
-              </Button>
-              
-              {/* عرض العربة */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="relative">
-                    <ShoppingCart className="h-5 w-5" />
-                    {cart.length > 0 && (
-                      <span className="absolute -top-2 -left-2 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                        {cart.length}
-                      </span>
-                    )}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-80" align="end">
-                  <div className="p-4">
-                    <h3 className="font-bold mb-3">سلة التسوق</h3>
-                    
-                    {cart.length === 0 ? (
-                      <p className="text-center text-muted-foreground py-4">السلة فارغة</p>
-                    ) : (
-                      <>
-                        <div className="max-h-64 overflow-y-auto mb-4">
-                          {cart.map((item) => (
-                            <div key={`${item.id}-${Date.now()}`} className="flex items-center justify-between py-2 border-b">
-                              <div className="flex items-center space-x-4 space-x-reverse">
-                                <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
-                                <div>
-                                  <p className="font-medium">{item.name}</p>
-                                  <p className="text-sm text-muted-foreground">{item.price} جنيه</p>
+              <div className="flex gap-2">
+                {/* تبديل الفلاتر للموبايل */}
+                <Button 
+                  variant="outline" 
+                  className="lg:hidden flex-1 items-center gap-2"
+                  onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+                >
+                  <Filter className="h-4 w-4" />
+                  الفلاتر
+                </Button>
+                
+                {/* عرض العربة */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="relative">
+                      <ShoppingCart className="h-5 w-5" />
+                      {cart.length > 0 && (
+                        <span className="absolute -top-2 -left-2 bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                          {cart.length}
+                        </span>
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[80vw] sm:w-80" align="end">
+                    <div className="p-4">
+                      <h3 className="font-bold mb-3">سلة التسوق</h3>
+                      
+                      {cart.length === 0 ? (
+                        <p className="text-center text-muted-foreground py-4">السلة فارغة</p>
+                      ) : (
+                        <>
+                          <div className="max-h-64 overflow-y-auto mb-4">
+                            {cart.map((item) => (
+                              <div key={`${item.id}-${Date.now() * Math.random()}`} className="flex items-center justify-between py-2 border-b">
+                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                  <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded" />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium truncate">{item.name}</p>
+                                    <p className="text-sm text-muted-foreground">{item.price} جنيه</p>
+                                  </div>
                                 </div>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  onClick={() => handleRemoveFromCart(item.id)}
+                                  className="text-destructive"
+                                >
+                                  ×
+                                </Button>
                               </div>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                onClick={() => handleRemoveFromCart(item.id)}
-                                className="text-destructive"
-                              >
-                                ×
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                        
-                        <div className="flex items-center justify-between font-bold mb-4">
-                          <span>الإجمالي:</span>
-                          <span>{calculateTotal()} جنيه</span>
-                        </div>
-                        
-                        <Button className="w-full">إتمام الطلب</Button>
-                      </>
-                    )}
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                            ))}
+                          </div>
+                          
+                          <div className="flex items-center justify-between font-bold mb-4">
+                            <span>الإجمالي:</span>
+                            <span>{calculateTotal()} جنيه</span>
+                          </div>
+                          
+                          <Button 
+                            className="w-full"
+                            onClick={handleCheckout}
+                          >
+                            إتمام الطلب
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
 
             {/* فلاتر للموبايل */}
             <Collapsible
               open={isMobileFilterOpen}
               onOpenChange={setIsMobileFilterOpen}
-              className="mb-6 lg:hidden"
+              className="mb-4 lg:hidden"
             >
               <CollapsibleContent>
                 <Card className="p-4 mb-4">
@@ -354,7 +379,7 @@ const Products = () => {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {products.map((product) => (
                   <ProductCard
                     key={product.id}
